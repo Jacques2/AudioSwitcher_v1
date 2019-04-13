@@ -54,8 +54,10 @@
             this.memoryCleaner = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.checkBoxDisabledDevices = new System.Windows.Forms.CheckBox();
-            this.hotKeyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.checkBoxMute = new System.Windows.Forms.CheckBox();
+            this.checkBoxStartup = new System.Windows.Forms.CheckBox();
+            this.buttonHotKey = new System.Windows.Forms.Button();
+            this.hotKeyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.notifyIconStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.hotKeyBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -196,10 +198,6 @@
             this.checkBoxDisabledDevices.UseVisualStyleBackColor = true;
             this.checkBoxDisabledDevices.CheckedChanged += new System.EventHandler(this.CheckBoxDisabledDevices_CheckedChanged);
             // 
-            // hotKeyBindingSource
-            // 
-            this.hotKeyBindingSource.DataSource = typeof(FortyOne.AudioSwitcher.HotKeyData.HotKey);
-            // 
             // checkBoxMute
             // 
             this.checkBoxMute.AutoSize = true;
@@ -211,12 +209,39 @@
             this.checkBoxMute.UseVisualStyleBackColor = true;
             this.checkBoxMute.CheckedChanged += new System.EventHandler(this.CheckBoxMute_CheckedChanged);
             // 
+            // checkBoxStartup
+            // 
+            this.checkBoxStartup.AutoSize = true;
+            this.checkBoxStartup.Location = new System.Drawing.Point(6, 52);
+            this.checkBoxStartup.Name = "checkBoxStartup";
+            this.checkBoxStartup.Size = new System.Drawing.Size(123, 17);
+            this.checkBoxStartup.TabIndex = 5;
+            this.checkBoxStartup.Text = "Auto Run on Startup";
+            this.checkBoxStartup.UseVisualStyleBackColor = true;
+            this.checkBoxStartup.CheckedChanged += new System.EventHandler(this.CheckBoxStartup_CheckedChanged);
+            // 
+            // buttonHotKey
+            // 
+            this.buttonHotKey.Location = new System.Drawing.Point(6, 77);
+            this.buttonHotKey.Name = "buttonHotKey";
+            this.buttonHotKey.Size = new System.Drawing.Size(75, 23);
+            this.buttonHotKey.TabIndex = 6;
+            this.buttonHotKey.Text = "Set Hot Key";
+            this.buttonHotKey.UseVisualStyleBackColor = true;
+            this.buttonHotKey.Click += new System.EventHandler(this.ButtonHotKey_Click);
+            // 
+            // hotKeyBindingSource
+            // 
+            this.hotKeyBindingSource.DataSource = typeof(FortyOne.AudioSwitcher.HotKeyData.HotKey);
+            // 
             // AudioSwitcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(274, 161);
+            this.Controls.Add(this.buttonHotKey);
+            this.Controls.Add(this.checkBoxStartup);
             this.Controls.Add(this.checkBoxMute);
             this.Controls.Add(this.checkBoxDisabledDevices);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -266,6 +291,8 @@
         private System.Windows.Forms.ToolStripMenuItem updateAvailableToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxDisabledDevices;
         private System.Windows.Forms.CheckBox checkBoxMute;
+        private System.Windows.Forms.CheckBox checkBoxStartup;
+        private System.Windows.Forms.Button buttonHotKey;
     }
 }
 

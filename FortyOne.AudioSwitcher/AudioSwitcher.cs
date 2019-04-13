@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.Observables;
+using FortyOne.AudioSwitcher.HotKeyData;
 using FortyOne.AudioSwitcher.Properties;
 
 namespace FortyOne.AudioSwitcher
@@ -44,7 +45,13 @@ namespace FortyOne.AudioSwitcher
 
             _originalTrayIcon = new Icon(notifyIcon1.Icon, 32, 32);
 
+            Program.Settings.AutoStartWithWindows = Program.Settings.AutoStartWithWindows;
+            checkBoxStartup.Checked = Program.Settings.AutoStartWithWindows;
+
+            HotKeyManager.HotKeyPressed += HotKeyManager_HotKeyPressed;
             AudioDeviceManager.Controller.AudioDeviceChanged.Subscribe(AudioDeviceManager_AudioDeviceChanged);
+
+            ChangeMute();
 
             MinimizeFootprint();
         }
@@ -131,10 +138,12 @@ namespace FortyOne.AudioSwitcher
             if (mute)
             {
                 notifyIcon1.Icon = Properties.Resources.red;
+                checkBoxMute.Checked = true;
             }
             else
             {
                 notifyIcon1.Icon = Properties.Resources.green;
+                checkBoxMute.Checked = false;
             }
         }
         private void AudioDeviceManager_AudioDeviceChanged(DeviceChangedArgs e)
@@ -304,6 +313,10 @@ namespace FortyOne.AudioSwitcher
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
+            ToggleMute();
+        }
+        private void ToggleMute()
+        {
             if (checkBoxMute.CheckState == CheckState.Checked)
             {
                 checkBoxMute.CheckState = CheckState.Unchecked;
@@ -340,6 +353,7 @@ namespace FortyOne.AudioSwitcher
                     itemsToToggle.Add(dev.Id);
                 }
                 SaveItemsToToggle();
+                ChangeMute();
             }
         }
         private void AudioSwitcher_ResizeEnd(object sender, EventArgs e)
@@ -372,6 +386,30 @@ namespace FortyOne.AudioSwitcher
             else
                 _deviceStateFilter ^= DeviceState.Disabled;
             ChangeMute();
+        }
+
+        private void CheckBoxStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.Settings.AutoStartWithWindows = checkBoxStartup.Checked;
+        }
+
+        private void ButtonHotKey_Click(object sender, EventArgs e)
+        {
+            HotKeyManager.ClearAll();
+            var hkf = new HotKeyForm();
+            hkf.ShowDialog(this);
+        }
+
+        private void HotKeyManager_HotKeyPressed(object sender, EventArgs e)
+        {
+            //Double check here before handling
+            if (DisableHotKeyFunction || Program.Settings.DisableHotKeys)
+                return;
+
+            if (sender is HotKey)
+            {
+                ToggleMute();
+            }
         }
     }
 }

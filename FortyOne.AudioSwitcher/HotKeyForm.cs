@@ -32,16 +32,6 @@ namespace FortyOne.AudioSwitcher
 
             if (Program.Settings.ShowDisconnectedDevices)
                 _deviceStateFilter |= DeviceState.Unplugged;
-
-            cmbDevices.Items.Clear();
-            foreach (var ad in AudioDeviceManager.Controller.GetPlaybackDevices(_deviceStateFilter))
-                cmbDevices.Items.Add(ad);
-
-            foreach (var ad in AudioDeviceManager.Controller.GetCaptureDevices(_deviceStateFilter))
-                cmbDevices.Items.Add(ad);
-
-            cmbDevices.DisplayMember = "FullName";
-            cmbDevices.ValueMember = "ID";
         }
 
         public HotKeyForm(HotKey hk)
@@ -65,18 +55,6 @@ namespace FortyOne.AudioSwitcher
         private void HotKeyForm_Load(object sender, EventArgs e)
         {
             AudioSwitcher.Instance.DisableHotKeyFunction = true;
-
-            foreach (var o in cmbDevices.Items)
-            {
-                if (((IDevice)o).Id == _hotkey.DeviceId)
-                {
-                    cmbDevices.SelectedIndex = cmbDevices.Items.IndexOf(o);
-                    break;
-                }
-            }
-
-            cmbDevices.DisplayMember = "FullName";
-            cmbDevices.ValueMember = "ID";
         }
 
         private void txtHotKey_Enter(object sender, EventArgs e)
@@ -90,16 +68,11 @@ namespace FortyOne.AudioSwitcher
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (_mode == HotKeyFormMode.Normal && HotKeyManager.DuplicateHotKey(_hotkey))
-                return;
-
-            if (_mode == HotKeyFormMode.Edit)
-                HotKeyManager.DeleteHotKey(_linkedHotKey);
-
             //Add HK
             if (HotKeyManager.AddHotKey(_hotkey))
             {
                 DialogResult = DialogResult.OK;
+                MessageBox.Show(Convert.ToString(HotKeyManager.HotKeys.Count)); 
                 Close();
             }
             else
@@ -139,14 +112,6 @@ namespace FortyOne.AudioSwitcher
 
             if (_mode != HotKeyFormMode.Edit && HotKeyManager.DuplicateHotKey(_hotkey))
                 errorProvider1.SetError(txtHotKey, "Duplicate Hot Key Detected");
-        }
-
-        private void cmbDevices_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbDevices.SelectedItem == null)
-                return;
-
-            _hotkey.DeviceId = ((IDevice)cmbDevices.SelectedItem).Id;
         }
 
         private void HotKeyForm_FormClosed(object sender, FormClosedEventArgs e)
