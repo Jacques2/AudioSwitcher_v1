@@ -211,6 +211,8 @@
     <Content Include="Icons\c.png" />
     <Content Include="Icons\e.png" />
     <Content Include="Icons\f.png" />
+    <None Include="Icons\green.ico" />
+    <None Include="Icons\red.ico" />
     <Content Include="Resources\shortcut.png" />
     <None Include="Icons\github.png" />
     <None Include="Icons\twitter.png" />

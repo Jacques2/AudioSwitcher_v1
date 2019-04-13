@@ -27,6 +27,7 @@ namespace FortyOne.AudioSwitcher.Configuration
         public const string SETTING_SHOWDISCONNECTEDDDEVICES = "ShowDisconnectedDevices";
         public const string SETTING_SHOWDPDEVICEIICONINTRAY = "ShowDPDeviceIconInTray";
         public const string SETTING_UPDATE_NOTIFICATIONS_ENABLED = "UpdateNotificationsEnabled";
+        public const string SETTING_MUTEDEVICES = "MuteDevices";
         private readonly ISettingsSource _configWriter;
 
         public ConfigurationSettings(ISettingsSource source)
@@ -103,6 +104,16 @@ namespace FortyOne.AudioSwitcher.Configuration
                     Convert.ToBoolean(_configWriter.Get(SETTING_SHOWDISABLEDDEVICES));
             }
             set { _configWriter.Set(SETTING_SHOWDISABLEDDEVICES, value.ToString()); }
+        }
+
+        public bool MuteDevices
+        {
+            get
+            {
+                return
+                    Convert.ToBoolean(_configWriter.Get(SETTING_MUTEDEVICES));
+            }
+            set { _configWriter.Set(SETTING_MUTEDEVICES, value.ToString()); }
         }
 
         public bool ShowUnknownDevicesInHotkeyList
@@ -289,6 +300,9 @@ namespace FortyOne.AudioSwitcher.Configuration
             if (!SettingExists(SETTING_SHOWDISABLEDDEVICES))
                 ShowDisabledDevices = false;
 
+            if (!SettingExists(SETTING_MUTEDEVICES))
+                MuteDevices = false;
+
             if (!SettingExists(SETTING_SHOWUNKNOWNDEVICESINHOTKEYLIST))
                 ShowUnknownDevicesInHotkeyList = false;
             
@@ -314,6 +328,7 @@ namespace FortyOne.AudioSwitcher.Configuration
             HotKeys = otherSettings.HotKeys;
             PollForUpdates = otherSettings.PollForUpdates;
             ShowDisabledDevices = otherSettings.ShowDisabledDevices;
+            MuteDevices = otherSettings.MuteDevices;
             ShowUnknownDevicesInHotkeyList = otherSettings.ShowUnknownDevicesInHotkeyList;
             ShowDisconnectedDevices = otherSettings.ShowDisconnectedDevices;
             StartMinimized = otherSettings.StartMinimized;

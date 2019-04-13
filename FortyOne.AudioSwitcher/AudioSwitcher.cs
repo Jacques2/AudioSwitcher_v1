@@ -1,25 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.Observables;
-using FortyOne.AudioSwitcher.AudioSwitcherService;
-using FortyOne.AudioSwitcher.Configuration;
-using FortyOne.AudioSwitcher.Helpers;
-using FortyOne.AudioSwitcher.HotKeyData;
 using FortyOne.AudioSwitcher.Properties;
 
 namespace FortyOne.AudioSwitcher
@@ -89,7 +78,7 @@ namespace FortyOne.AudioSwitcher
         {
             BeginInvoke(new Action(Form_Load));
         }
-        private async void Form_Load()
+        private void Form_Load()
         {
             var icon = Icon.ExtractAssociatedIcon(Environment.ExpandEnvironmentVariables("%windir%\\system32\\control.exe"));
             LoadItemsToToggle();
@@ -108,26 +97,32 @@ namespace FortyOne.AudioSwitcher
                 if (Program.Settings.ShowDisabledDevices)
                     _deviceStateFilter |= DeviceState.Disabled;
             }
-
-            var dev = AudioDeviceManager.Controller.GetDevice(Program.Settings.StartupPlaybackDeviceID);
-
-            if (dev != null)
-            {
-                await dev.SetAsDefaultAsync();
-                if (Program.Settings.DualSwitchMode)
-                    await dev.SetAsDefaultCommunicationsAsync();
-            }
-
-            dev = AudioDeviceManager.Controller.GetDevice(Program.Settings.StartupRecordingDeviceID);
-
-            if (dev != null)
-            {
-                await dev.SetAsDefaultAsync();
-                if (Program.Settings.DualSwitchMode)
-                    await dev.SetAsDefaultCommunicationsAsync();
-            }
+            Hide();
+            MinimizeFootprint();
+            ChangeMute();
         }
 
+        private void ChangeMute()
+        {
+            bool mute = Program.Settings.MuteDevices;
+            IEnumerable<IDevice> list = AudioDeviceManager.Controller.GetPlaybackDevices(_deviceStateFilter).ToList();
+            foreach (var ad in list)
+            {
+                if (itemsToToggle.Contains(ad.Id))
+                {
+                    var dev = (IDevice)ad;
+                    dev.SetMuteAsync(mute);
+                }
+            }
+            if (mute)
+            {
+                notifyIcon1.Icon = Properties.Resources.red;
+            }
+            else
+            {
+                notifyIcon1.Icon = Properties.Resources.green;
+            }
+        }
         private void AudioDeviceManager_AudioDeviceChanged(DeviceChangedArgs e)
         {
             Action refreshAction = () => { };
@@ -273,23 +268,8 @@ namespace FortyOne.AudioSwitcher
             }
 
             notifyIcon1.Text = notifyText;
-
-            RefreshTrayIcon();
         }
 
-        private void RefreshTrayIcon()
-        {
-            var defaultDevice = AudioDeviceManager.Controller.DefaultPlaybackDevice;
-            var oldIcon = notifyIcon1.Icon;
-
-            if (defaultDevice != null && Program.Settings.ShowDPDeviceIconInTray)
-                notifyIcon1.Icon = ExtractIconFromPath(defaultDevice.IconPath);
-            else
-                notifyIcon1.Icon = _originalTrayIcon;
-
-            if (oldIcon.Handle != _originalTrayIcon.Handle)
-                oldIcon.Dispose();
-        }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -306,15 +286,15 @@ namespace FortyOne.AudioSwitcher
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
-            IEnumerable<IDevice> list = AudioDeviceManager.Controller.GetPlaybackDevices(_deviceStateFilter).ToList();
-            foreach (var ad in list)
+            if (checkBoxMute.CheckState == CheckState.Checked)
             {
-                if (itemsToToggle.Contains(ad.Id))
-                {
-                    var dev = (IDevice)ad;
-                    dev.ToggleMuteAsync();
-                }
+                checkBoxMute.CheckState = CheckState.Unchecked;
             }
+            else
+            {
+                checkBoxMute.CheckState = CheckState.Checked;
+            }
+            ChangeMute();
         }
 
         private void Form1_Activated(object sender, EventArgs e)
@@ -367,7 +347,14 @@ namespace FortyOne.AudioSwitcher
 
         private void CheckBoxMute_CheckedChanged(object sender, EventArgs e)
         {
+            Program.Settings.MuteDevices = checkBoxMute.Checked;
 
+            //mute or unmute devices
+            if (Program.Settings.MuteDevices)
+                _deviceStateFilter |= DeviceState.Disabled;
+            else
+                _deviceStateFilter ^= DeviceState.Disabled;
+            ChangeMute();
         }
     }
 }
