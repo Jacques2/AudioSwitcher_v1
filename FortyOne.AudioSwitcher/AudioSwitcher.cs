@@ -93,9 +93,14 @@ namespace FortyOne.AudioSwitcher
                 }
 
                 icon.Dispose();
+
                 checkBoxDisabledDevices.Checked = Program.Settings.ShowDisabledDevices;
+
+                //Set, or remove the disconnected filter
                 if (Program.Settings.ShowDisabledDevices)
                     _deviceStateFilter |= DeviceState.Disabled;
+                else
+                    _deviceStateFilter ^= DeviceState.Disabled;
             }
             Hide();
             MinimizeFootprint();
@@ -106,7 +111,16 @@ namespace FortyOne.AudioSwitcher
         {
             bool mute = Program.Settings.MuteDevices;
             IEnumerable<IDevice> list = AudioDeviceManager.Controller.GetPlaybackDevices(_deviceStateFilter).ToList();
+            IEnumerable<IDevice> list2 = AudioDeviceManager.Controller.GetCaptureDevices(_deviceStateFilter).ToList();
             foreach (var ad in list)
+            {
+                if (itemsToToggle.Contains(ad.Id))
+                {
+                    var dev = (IDevice)ad;
+                    dev.SetMuteAsync(mute);
+                }
+            }
+            foreach (var ad in list2)
             {
                 if (itemsToToggle.Contains(ad.Id))
                 {
@@ -193,6 +207,7 @@ namespace FortyOne.AudioSwitcher
                 itemsToToggle.Add(Guid.Parse(lineRead));
                 lineRead = sr.ReadLine();
             }
+            sr.Close();
         }
 
         private void RefreshNotifyIconItems()
@@ -200,6 +215,9 @@ namespace FortyOne.AudioSwitcher
             notifyIconStrip.Items.Clear();
             var playbackCount = 0;
             var recordingCount = 0;
+            checkBoxDisabledDevices.Checked = Program.Settings.ShowDisabledDevices;
+            if (Program.Settings.ShowDisabledDevices)
+                _deviceStateFilter |= DeviceState.Disabled;
 
             IEnumerable<IDevice> list = AudioDeviceManager.Controller.GetPlaybackDevices(_deviceStateFilter).ToList();
 
@@ -337,7 +355,6 @@ namespace FortyOne.AudioSwitcher
         private void CheckBoxDisabledDevices_CheckedChanged(object sender, EventArgs e)
         {
             Program.Settings.ShowDisabledDevices = checkBoxDisabledDevices.Checked;
-
             //Set, or remove the disconnected filter
             if (Program.Settings.ShowDisabledDevices)
                 _deviceStateFilter |= DeviceState.Disabled;
