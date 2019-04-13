@@ -72,7 +72,6 @@ namespace FortyOne.AudioSwitcher
             if (HotKeyManager.AddHotKey(_hotkey))
             {
                 DialogResult = DialogResult.OK;
-                MessageBox.Show(Convert.ToString(HotKeyManager.HotKeys.Count)); 
                 Close();
             }
             else

@@ -77,7 +77,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>fortyone.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -226,7 +227,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="fortyone.pfx" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

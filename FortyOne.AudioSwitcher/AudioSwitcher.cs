@@ -43,6 +43,10 @@ namespace FortyOne.AudioSwitcher
             InitializeComponent();
             HandleCreated += AudioSwitcher_HandleCreated;
 
+            //creates file if it does not exist
+            StreamWriter setupToggles = File.AppendText(AppDomain.CurrentDomain.BaseDirectory + "itemsToToggle.dat");
+            setupToggles.Close();
+
             _originalTrayIcon = new Icon(notifyIcon1.Icon, 32, 32);
 
             Program.Settings.AutoStartWithWindows = Program.Settings.AutoStartWithWindows;

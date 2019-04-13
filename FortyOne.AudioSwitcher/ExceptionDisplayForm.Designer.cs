@@ -51,12 +51,15 @@
             // 
             // txtErrorDetails
             // 
+            this.txtErrorDetails.Enabled = false;
             this.txtErrorDetails.Location = new System.Drawing.Point(12, 72);
             this.txtErrorDetails.Multiline = true;
             this.txtErrorDetails.Name = "txtErrorDetails";
             this.txtErrorDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtErrorDetails.Size = new System.Drawing.Size(279, 61);
             this.txtErrorDetails.TabIndex = 0;
+            this.txtErrorDetails.Text = "A bug report cannot be sent as unofficial modifications have been made to the sof" +
+    "tware";
             // 
             // button1
             // 
@@ -79,6 +82,7 @@
             // 
             // btnReport
             // 
+            this.btnReport.Enabled = false;
             this.btnReport.Location = new System.Drawing.Point(135, 267);
             this.btnReport.Name = "btnReport";
             this.btnReport.Size = new System.Drawing.Size(75, 23);
