@@ -110,7 +110,6 @@
             this.deviceNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hotKeyStringDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hotKeyBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.playbackStrip.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tapPlayback.SuspendLayout();
@@ -200,7 +199,6 @@
             // 
             // tapPlayback
             // 
-            this.tapPlayback.Controls.Add(this.button1);
             this.tapPlayback.Controls.Add(this.openControlPanelPlayback);
             this.tapPlayback.Controls.Add(this.btnSetPlaybackDefault);
             this.tapPlayback.Controls.Add(this.listBoxPlayback);
@@ -856,7 +854,7 @@
             this.notifyIcon1.Text = "Audio Switcher";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
-            this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
+            this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseClick_1);
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // notifyIconStrip
@@ -867,9 +865,8 @@
             this.updateAvailableToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.notifyIconStrip.Name = "notifyIconStrip";
-            this.notifyIconStrip.Size = new System.Drawing.Size(194, 76);
+            this.notifyIconStrip.Size = new System.Drawing.Size(194, 98);
             this.notifyIconStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.notifyIconStrip_ItemClicked);
-            this.notifyIconStrip.Click += new System.EventHandler(this.NotifyIconStrip_Click);
             // 
             // toolStripSeparator1
             // 
@@ -1003,16 +1000,6 @@
             // 
             this.hotKeyBindingSource.DataSource = typeof(FortyOne.AudioSwitcher.HotKeyData.HotKey);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(57, 282);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
-            // 
             // AudioSwitcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1144,7 +1131,6 @@
         private System.Windows.Forms.PictureBox openControlPanelPlayback;
         private System.Windows.Forms.PictureBox openControlPanelRecording;
 		private System.Windows.Forms.CheckBox chkShowUnknownDevicesInHotkeyList;
-        private System.Windows.Forms.Button button1;
     }
 }
 

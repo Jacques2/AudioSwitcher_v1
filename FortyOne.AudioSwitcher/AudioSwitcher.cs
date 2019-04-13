@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.Observables;
 using FortyOne.AudioSwitcher.AudioSwitcherService;
@@ -230,7 +232,7 @@ namespace FortyOne.AudioSwitcher
         private async void Form_Load()
         {
             var icon = Icon.ExtractAssociatedIcon(Environment.ExpandEnvironmentVariables("%windir%\\system32\\control.exe"));
-
+            LoadItemsToToggle();
             if (icon != null)
             {
                 using (var i = new Bitmap(25, 25))
@@ -1051,7 +1053,29 @@ namespace FortyOne.AudioSwitcher
             listBoxRecording.ResumeLayout();
         }
 
-        List<object> itemsToToggle = new List<object>();
+        List<Guid> itemsToToggle = new List<Guid>();
+
+        private void SaveItemsToToggle()
+        {
+            StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "itemsToToggle.dat");
+            for (int i = 0; i < itemsToToggle.Count; i++)
+            {
+                sw.WriteLine(itemsToToggle[i]);
+            }
+            sw.Close();
+        }
+        private void LoadItemsToToggle()
+        {
+            itemsToToggle.Clear();
+            StreamReader sr = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "itemsToToggle.dat");
+            string lineRead = sr.ReadLine();
+            while (lineRead != null)
+            {
+                itemsToToggle.Add(Guid.Parse(lineRead));
+                lineRead = sr.ReadLine();
+            }
+        }
+
         private void RefreshNotifyIconItems()
         {
             notifyIconStrip.Items.Clear();
@@ -1071,7 +1095,7 @@ namespace FortyOne.AudioSwitcher
                     Tag = ad,
                     Checked = false
                 };
-                if (itemsToToggle.Contains(item.Tag))
+                if (itemsToToggle.Contains(ad.Id))
                 {
                     item.Checked = true;
                 }
@@ -1095,7 +1119,7 @@ namespace FortyOne.AudioSwitcher
                     Tag = ad,
                     Checked = false
                 };
-                if (itemsToToggle.Contains(item.Tag))
+                if (itemsToToggle.Contains(ad.Id))
                 {
                     item.Checked = true;
                 }
@@ -1323,9 +1347,15 @@ namespace FortyOne.AudioSwitcher
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
-            Show();
-            BringToFront();
-            SetForegroundWindow(Handle);
+            IEnumerable<IDevice> list = AudioDeviceManager.Controller.GetPlaybackDevices(_deviceStateFilter).ToList();
+            foreach (var ad in list)
+            {
+                if (itemsToToggle.Contains(ad.Id))
+                {
+                    var dev = (IDevice)ad;
+                    dev.ToggleMuteAsync();
+                }
+            }
         }
 
         private void Form1_Activated(object sender, EventArgs e)
@@ -1339,13 +1369,20 @@ namespace FortyOne.AudioSwitcher
             Application.Exit();
         }
 
-        private async void notifyIconStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void notifyIconStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem != null && e.ClickedItem.Tag is IDevice)
             {
-                var dev = (IDevice)e.ClickedItem.Tag;
-                itemsToToggle.Add(e.ClickedItem.Tag);
-                await dev.ToggleMuteAsync();
+                IDevice dev = (IDevice)e.ClickedItem.Tag;
+                if (itemsToToggle.Contains(dev.Id))
+                {
+                    itemsToToggle.Remove(dev.Id);
+                }
+                else
+                {
+                    itemsToToggle.Add(dev.Id);
+                }
+                SaveItemsToToggle();
             }
         }
 
@@ -1484,12 +1521,7 @@ namespace FortyOne.AudioSwitcher
 			}
 		}
 
-        private void NotifyIconStrip_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button1_Click_1(object sender, EventArgs e)
+        private void NotifyIcon1_MouseClick_1(object sender, MouseEventArgs e)
         {
             RefreshNotifyIconItems();
         }
