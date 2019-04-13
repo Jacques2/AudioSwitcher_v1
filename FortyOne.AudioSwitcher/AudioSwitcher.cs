@@ -1051,10 +1051,10 @@ namespace FortyOne.AudioSwitcher
             listBoxRecording.ResumeLayout();
         }
 
+        List<object> itemsToToggle = new List<object>();
         private void RefreshNotifyIconItems()
         {
             notifyIconStrip.Items.Clear();
-
             var playbackCount = 0;
             var recordingCount = 0;
 
@@ -1069,9 +1069,12 @@ namespace FortyOne.AudioSwitcher
                 {
                     Text = ad.FullName,
                     Tag = ad,
-                    Checked = ad.IsDefaultDevice
+                    Checked = false
                 };
-
+                if (itemsToToggle.Contains(item.Tag))
+                {
+                    item.Checked = true;
+                }
                 notifyIconStrip.Items.Add(item);
                 playbackCount++;
             }
@@ -1090,9 +1093,12 @@ namespace FortyOne.AudioSwitcher
                 {
                     Text = ad.FullName,
                     Tag = ad,
-                    Checked = ad.IsDefaultDevice
+                    Checked = false
                 };
-
+                if (itemsToToggle.Contains(item.Tag))
+                {
+                    item.Checked = true;
+                }
                 notifyIconStrip.Items.Add(item);
                 recordingCount++;
             }
@@ -1338,10 +1344,8 @@ namespace FortyOne.AudioSwitcher
             if (e.ClickedItem != null && e.ClickedItem.Tag is IDevice)
             {
                 var dev = (IDevice)e.ClickedItem.Tag;
-                await dev.SetAsDefaultAsync();
-
-                if (Program.Settings.DualSwitchMode)
-                    await dev.SetAsDefaultCommunicationsAsync();
+                itemsToToggle.Add(e.ClickedItem.Tag);
+                await dev.ToggleMuteAsync();
             }
         }
 
@@ -1462,6 +1466,7 @@ namespace FortyOne.AudioSwitcher
 
             var id = SelectedRecordingDevice.Id;
             await SelectedRecordingDevice.SetAsDefaultAsync();
+            await SelectedRecordingDevice.ToggleMuteAsync();
             PostRecordingMenuClick(id);
         }
 
@@ -1478,5 +1483,15 @@ namespace FortyOne.AudioSwitcher
 				}));
 			}
 		}
-	}
+
+        private void NotifyIconStrip_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button1_Click_1(object sender, EventArgs e)
+        {
+            RefreshNotifyIconItems();
+        }
+    }
 }
