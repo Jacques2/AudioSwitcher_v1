@@ -214,6 +214,8 @@
     <Content Include="Icons\f.png" />
     <None Include="Icons\green.ico" />
     <None Include="Icons\red.ico" />
+    <None Include="Resources\micoff.wav" />
+    <None Include="Resources\micon.wav" />
     <Content Include="Resources\shortcut.png" />
     <None Include="Icons\github.png" />
     <None Include="Icons\twitter.png" />

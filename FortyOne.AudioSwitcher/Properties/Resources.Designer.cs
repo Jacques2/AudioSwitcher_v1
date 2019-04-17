@@ -170,6 +170,24 @@ namespace FortyOne.AudioSwitcher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream micoff {
+            get {
+                return ResourceManager.GetStream("micoff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream micon {
+            get {
+                return ResourceManager.GetStream("micon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AudioSwitcher.ini.
         /// </summary>
         internal static string OldConfigFile {
