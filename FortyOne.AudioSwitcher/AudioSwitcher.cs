@@ -381,18 +381,25 @@ namespace FortyOne.AudioSwitcher
 
         System.Media.SoundPlayer MicOn = new System.Media.SoundPlayer(Properties.Resources.micon);
         System.Media.SoundPlayer MicOff = new System.Media.SoundPlayer(Properties.Resources.micoff);
+        bool hasStarted = false;
         private void CheckBoxMute_CheckedChanged(object sender, EventArgs e)
         {
             Program.Settings.MuteDevices = checkBoxMute.Checked;
-            if (checkBoxMute.Checked)
+            if (hasStarted)
             {
-                MicOff.Play();
+                if (checkBoxMute.Checked)
+                {
+                    MicOff.Play();
+                }
+                else
+                {
+                    MicOn.Play();
+                }
             }
             else
             {
-                MicOn.Play();
+                hasStarted = true;
             }
-
             //mute or unmute devices
             if (Program.Settings.MuteDevices)
                 _deviceStateFilter |= DeviceState.Disabled;

@@ -232,7 +232,7 @@
             // 
             // hotKeyBindingSource
             // 
-            this.hotKeyBindingSource.DataSource = typeof(FortyOne.AudioSwitcher.HotKeyData.HotKey);
+            //this.hotKeyBindingSource.DataSource = typeof(FortyOne.AudioSwitcher.HotKeyData.HotKey);
             // 
             // AudioSwitcher
             // 
