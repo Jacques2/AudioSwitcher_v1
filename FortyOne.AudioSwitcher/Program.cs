@@ -35,7 +35,7 @@ namespace FortyOne.AudioSwitcher
             }
 
             Application.ApplicationExit += Application_ApplicationExit;
-            AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AudioSwitcher");
+            AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyAudioSwitcher");
 
             if (!Directory.Exists(AppDataDirectory))
                 Directory.CreateDirectory(AppDataDirectory);

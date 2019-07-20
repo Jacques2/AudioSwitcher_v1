@@ -201,15 +201,15 @@ namespace FortyOne.AudioSwitcher.Configuration
                     {
                         var add =
                             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                        add.SetValue("AudioSwitcher", "\"" + Assembly.GetEntryAssembly().Location + "\"");
+                        add.SetValue("MyAudioSwitcher", "\"" + Assembly.GetEntryAssembly().Location + "\"");
                     }
                     else
                     {
                         var key =
                             Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-                        if (key != null && key.GetValue("AudioSwitcher") != null)
-                            key.DeleteValue("AudioSwitcher");
+                        if (key != null && key.GetValue("MyAudioSwitcher") != null)
+                            key.DeleteValue("MyAudioSwitcher");
                     }
 
                     _configWriter.Set(SETTING_AUTOSTARTWITHWINDOWS, value.ToString());

@@ -415,6 +415,7 @@ namespace FortyOne.AudioSwitcher
 
         private void ButtonHotKey_Click(object sender, EventArgs e)
         {
+            Program.Settings.HotKeys = "";
             HotKeyManager.ClearAll();
             var hkf = new HotKeyForm();
             hkf.ShowDialog(this);

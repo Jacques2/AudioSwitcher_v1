@@ -98,6 +98,7 @@ namespace FortyOne.AudioSwitcher.HotKeyData
 
         public static bool AddHotKey(HotKey hk)
         {
+            _hotkeys.Clear();
             //Check that there is no duplicate
             if (DuplicateHotKey(hk))
                 return false;

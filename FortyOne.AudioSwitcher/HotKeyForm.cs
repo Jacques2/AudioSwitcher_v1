@@ -26,6 +26,7 @@ namespace FortyOne.AudioSwitcher
 
             _hotkey = new HotKey();
 
+            HotKeyManager.ClearAll();
             // Keep in mind how the user wants the devices shown
             if (Program.Settings.ShowDisabledDevices)
                 _deviceStateFilter |= DeviceState.Disabled;
